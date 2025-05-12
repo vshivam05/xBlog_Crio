@@ -1,0 +1,15 @@
+node_modules
+dist
+package-lock.json
+yarn-error.log
+
+.env
+
+serviceAccountKey.json
+*.log   
+
+*.env
+
+
+
+
