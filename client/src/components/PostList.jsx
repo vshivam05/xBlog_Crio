@@ -93,14 +93,12 @@ const PostList = ({ posts, handleEdit, fetchPosts }) => {
   // View Single Post
   if (selectedPost) {
     const date = new Date(selectedPost.createdAt).toLocaleDateString();
+    console.log(`${Api}/${selectedPost.image.replace(/\\/g, "/")}`);
     return (
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-6">
           <img
-            src={`http://localhost:8082/${selectedPost.image.replace(
-              /\\/g,
-              "/"
-            )}`}
+            src={`${Api}/${selectedPost.image.replace(/\\/g, "/")}`}
             alt="Post"
             className="w-full h-96 object-cover rounded"
           />
@@ -202,7 +200,7 @@ const PostList = ({ posts, handleEdit, fetchPosts }) => {
             >
               <img
                 className="w-full h-48 object-cover"
-                src={`http://localhost:8082/${post.image.replace(/\\/g, "/")}`}
+                src={`${Api}/${post.image.replace(/\\/g, "/")}`}
                 alt="Post"
               />
               <div className="px-6 py-4">
