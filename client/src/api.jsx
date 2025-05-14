@@ -57,7 +57,7 @@ export const createPost = async ({ formData, token }) => {
     return newpost;
   } catch (error) {
     console.error("Error during creating post:", error);
-    alert(error.response.data.message);
+    alert(error);
     return error.response.data.message;
   }
 };

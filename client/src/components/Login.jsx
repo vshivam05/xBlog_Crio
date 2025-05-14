@@ -60,9 +60,7 @@ const Login = () => {
       const response = await login(formData); // Assuming this returns token + user data
       const { token, user } = response.user;
       console.log("Response from login:", response.user);
-      // Save to localStorage
-      // console.log("token", token);
-      // console.log("User", user);
+
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
 

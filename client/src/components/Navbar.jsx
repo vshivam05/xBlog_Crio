@@ -54,7 +54,7 @@ const Navbar = () => {
             <Link to="login/userprofile" className="hover:underline">
               Profile
             </Link>
-            <Link to="/login/dashboard" className="hover:underline">
+            <Link to="/dashboard" className="hover:underline">
               Dashboard
             </Link>
             {/* <Link to={"/"} className="hover:underline"> */}
