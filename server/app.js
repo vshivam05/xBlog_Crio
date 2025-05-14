@@ -18,6 +18,6 @@ app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
-app.use("/api/post", postRoutes);
+app.use("/api/posts", postRoutes);
 
 export default app;

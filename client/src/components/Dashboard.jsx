@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { createPost, Api, handleEditPost } from "../api"; // Adjust the import based on your API structure
+import { createPost, Api, handleEditPost, getAllPosts } from "../api"; // Adjust the import based on your API structure
 import PostList from "./PostList"; // Adjust the import based on your file structure
 const Dashboard = () => {
   const token = localStorage.getItem("token");
+  const user = localStorage.getItem("user");
+  console.log("User in Dashboard:", user);
   const [showCreatePostForm, setShowCreatePostForm] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [getUserPosts, setUserPosts] = useState([]);
@@ -15,19 +17,26 @@ const Dashboard = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [postIdBeingEdited, setPostIdBeingEdited] = useState(null);
 
-  const fetchPosts = async () => {
+   const fetchPosts = async () => {
     try {
-      const response = await fetch(`${Api}/api/user/posts`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await response.json();
+      if (user.role == "admin") {
+        setUserPosts([]);
+        const response = await getAllPosts();
+        console.log("Fetched posts:", response.data);
+        setUserPosts(response.data);
+      } else {
+        const response = await fetch(`${Api}/api/user/posts`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+        const data = await response.json();
 
-      console.log("Fetched posts:", data);
-      setUserPosts(data);
+        console.log("Fetched posts:", data);
+        setUserPosts(data);
+      }
     } catch (error) {
       console.error("Error fetching posts:", error);
     }
@@ -130,13 +139,15 @@ const Dashboard = () => {
     <div className="bg-gray-900 min-h-screen py-8 text-gray-300 px-4 sm:px-6 lg:px-8">
       <div className=" w-full  md:w-full  flex items-center justify-between">
         <h1 className="text-white text-2xl font-semibold">My Posts</h1>
-        <button
-          type="submit"
-          onClick={handleCreatePostClick}
-          className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline"
-        >
-          + Create Post
-        </button>
+   {!showCreatePostForm && ( 
+  <button
+    type="button"
+    onClick={handleCreatePostClick}
+    className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline"
+  >
+    + Create Post
+  </button>
+)}
       </div>
 
       {/* <div className="flex mt-8"> */}
@@ -232,7 +243,7 @@ const Dashboard = () => {
                 </div>
                 <div className="flex justify-end">
                   <button
-                    type="submit"
+                    type="button"
                     onClick={handleCloseCreatePostForm}
                     className="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline mr-2"
                   >
@@ -248,7 +259,7 @@ const Dashboard = () => {
               </form>
             </div>
           </div>
-        ) : getUserPosts ? (
+        ) : getUserPosts.length !== 0 ? (
           <PostList
             posts={getUserPosts}
             handleEdit={handleEdit}

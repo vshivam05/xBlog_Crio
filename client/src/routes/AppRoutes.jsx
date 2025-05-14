@@ -9,15 +9,15 @@ const AppRoutes = () => {
   return (
     <>
       {/* <Router> */}
-        <Routes>
-          <Route path="/" element={<SignUp />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/home" element={<HomePage />} />
-          <Route path="login/userprofile" element={<UserProfile />} />
-          <Route path="/login/dashboard" element={<Dashboard />} />
+      <Routes>
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<HomePage />} />
+        <Route path="login/userprofile" element={<UserProfile />} />
+        <Route path="/login/dashboard" element={<Dashboard />} />
 
-          <Route path="*" element={<h1>404 Not Found</h1>} />
-        </Routes>
+        <Route path="*" element={<h1>404 Not Found</h1>} />
+      </Routes>
       {/* </Router> */}
     </>
   );

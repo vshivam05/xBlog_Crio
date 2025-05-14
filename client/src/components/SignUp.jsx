@@ -1,11 +1,11 @@
-
 import React, { useState } from "react";
 import { register, Api } from "../api";
 import { auth, provider } from "../utils/Firebase";
 import { signInWithPopup } from "firebase/auth";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-const CLOUDINARY_UPLOAD_URL = "https://api.cloudinary.com/v1_1/dfteatpco/image/upload";
+const CLOUDINARY_UPLOAD_URL =
+  "https://api.cloudinary.com/v1_1/dfteatpco/image/upload";
 const CLOUDINARY_UPLOAD_PRESET = "shivam";
 
 const SignUp = () => {
@@ -60,9 +60,14 @@ const SignUp = () => {
         avatar: avatarUrl,
       };
 
-      register(payload);
+      const response = await register(payload);
+      const { token, user } = response.user;
       console.log("Registration data sent:", payload);
-      navigate("/login");
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      navigate("/");
     } catch (err) {
       console.error("Signup error:", err);
     } finally {
@@ -84,7 +89,9 @@ const SignUp = () => {
         googleId,
       };
 
-      const res = await axios.post(`${Api}/api/auth/google-login`, { googleId });
+      const res = await axios.post(`${Api}/api/auth/google-login`, {
+        googleId,
+      });
 
       console.log("Backend Response:", res.data);
     } catch (error) {
@@ -105,6 +112,7 @@ const SignUp = () => {
           <input
             type="text"
             id="name"
+            name="name"
             value={data.name}
             onChange={handleChange}
             className="p-2 shadow-sm focus:ring-purple-500 focus:border-purple-500 block w-full sm:text-sm border-gray-700 rounded-md bg-white-800 text-gray-300"
@@ -117,6 +125,7 @@ const SignUp = () => {
           <input
             type="email"
             id="email"
+            name="email"
             value={data.email}
             onChange={handleChange}
             className="p-2 shadow-sm focus:ring-purple-500 focus:border-purple-500 block w-full sm:text-sm border-gray-700 rounded-md bg-white-800 text-gray-300"
@@ -129,6 +138,7 @@ const SignUp = () => {
           <input
             type="password"
             id="password"
+            name="password"
             value={data.password}
             onChange={handleChange}
             className="p-2 shadow-sm focus:ring-purple-500 focus:border-purple-500 block w-full sm:text-sm border-gray-700 rounded-md bg-gray-800 text-gray-300"
@@ -160,12 +170,13 @@ const SignUp = () => {
         <button
           type="submit"
           className="w-full bg-purple-500 hover:bg-purple-700 text-white font-bold py-3 rounded-md"
-          disabled={uploading}
+          disabled={uploading && data.avatar}
         >
           {uploading ? "Uploading..." : "Sign Up"}
         </button>
       </form>
       <button
+        type="button"
         onClick={handleGoogleSignup}
         className="mt-4 w-full bg-red-500 hover:bg-red-700 text-white font-bold py-3 rounded-md"
       >

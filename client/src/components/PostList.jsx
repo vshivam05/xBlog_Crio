@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Api,
   handleDeletePost,
@@ -9,12 +9,15 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComment } from "@fortawesome/free-solid-svg-icons";
 
-const PostList = ({ posts, handleEdit, fetchPosts }) => {
+const PostList = ({ posts, handleEdit, fetchPosts, isHomePage }) => {
   const [selectedPost, setSelectedPost] = useState(null);
   const [likes, setLikes] = useState(0);
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState("");
 
+  const user = localStorage.getItem("user");
+  const userData = JSON.parse(user);
+  console.log("user from th hompage", user);
   const handleView = (post) => {
     setSelectedPost(post);
     setLikes(0); // Reset like count on view
@@ -25,6 +28,12 @@ const PostList = ({ posts, handleEdit, fetchPosts }) => {
   const handleBack = () => {
     setSelectedPost(null);
   };
+
+  console.log("isHomePage", isHomePage);
+
+  const filteredPosts = isHomePage
+    ? posts
+    : posts.filter((post) => post.author._id === userData.id);
 
   const handleDelete = async (post) => {
     try {
@@ -42,6 +51,10 @@ const PostList = ({ posts, handleEdit, fetchPosts }) => {
       console.error("Error deleting post:", error);
     }
   };
+
+  // useEffect(() => {
+  //   fetchPosts();
+  // }, []);
 
   const handleLike = async (id) => {
     try {
@@ -119,6 +132,7 @@ const PostList = ({ posts, handleEdit, fetchPosts }) => {
           {/* Like Button */}
           <div className="mt-4">
             <button
+              type="button"
               onClick={() => {
                 handleLike(selectedPost._id);
               }}
@@ -143,6 +157,7 @@ const PostList = ({ posts, handleEdit, fetchPosts }) => {
                 className="flex-1 border border-gray-300 rounded-l px-4 py-2"
               />
               <button
+                type="button"
                 onClick={() => {
                   handleCommentSubmit(selectedPost._id);
                 }}
@@ -163,6 +178,7 @@ const PostList = ({ posts, handleEdit, fetchPosts }) => {
                     <span>{c.content}</span>
 
                     <button
+                      type="button"
                       className=" text-white bg-red-500 hover:text-gray-700 rounded p-2 px-4 "
                       onClick={() => {
                         handleCommentDelete(c._id, selectedPost._id);
@@ -177,6 +193,7 @@ const PostList = ({ posts, handleEdit, fetchPosts }) => {
           </div>
 
           <button
+            type="submit"
             onClick={handleBack}
             className="mt-6 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
           >
@@ -191,7 +208,7 @@ const PostList = ({ posts, handleEdit, fetchPosts }) => {
   return (
     <div className="container mx-auto px-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {posts.map((post, key) => {
+        {filteredPosts.map((post, key) => {
           const date = new Date(post.createdAt).toLocaleDateString();
           return (
             <div
@@ -206,6 +223,9 @@ const PostList = ({ posts, handleEdit, fetchPosts }) => {
               <div className="px-6 py-4">
                 <div className="font-bold text-xl mb-2">{post.title}</div>
                 <p className="text-gray-700 text-base">{post.content}</p>
+                <p className="text-gray-500 text-sm mt-1">
+                  by {post.author.name}
+                </p>
               </div>
               <div className="px-6 pt-4 pb-2">
                 {post.tags.map((tag, index) => (
@@ -225,6 +245,7 @@ const PostList = ({ posts, handleEdit, fetchPosts }) => {
 
                   <span className=" flex flex-row justify-between gap-2 ">
                     <button
+                      type="button"
                       onClick={() => {
                         handleLike(post._id);
                       }}
@@ -239,26 +260,31 @@ const PostList = ({ posts, handleEdit, fetchPosts }) => {
                     </span>
                   </span>
                 </div>
-                <div className="button">
-                  <button
-                    onClick={() => handleView(post)}
-                    className="m-2 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-                  >
-                    View
-                  </button>
-                  <button
-                    onClick={() => handleEdit(post)}
-                    className="m-2 bg-transparent hover:bg-gray-500 text-gray-800 font-semibold hover:text-white py-2 px-4 border border-gray-500 hover:border-transparent rounded"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(post)}
-                    className="m-2 bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded"
-                  >
-                    Delete
-                  </button>
-                </div>
+                {!isHomePage && (
+                  <div className="button">
+                    <button
+                      type="button"
+                      onClick={() => handleView(post)}
+                      className="m-2 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+                    >
+                      View
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleEdit(post)}
+                      className="m-2 bg-transparent hover:bg-gray-500 text-gray-800 font-semibold hover:text-white py-2 px-4 border border-gray-500 hover:border-transparent rounded"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(post)}
+                      className="m-2 bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           );

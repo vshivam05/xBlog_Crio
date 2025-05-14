@@ -16,7 +16,7 @@ export const register = async (data) => {
 export const login = async (data) => {
   try {
     const response = await axios.post(`${Api}/api/auth/login`, data);
-    // console.log(response.data);
+    console.log(response);
     return await response.data;
   } catch (error) {
     console.error("Error during login:", error.response.data.message);
@@ -47,7 +47,7 @@ export const createPost = async ({ formData, token }) => {
   // console.log("Token:", token);
 
   try {
-    const newpost = await axios.post(`${Api}/api/post`, formData, {
+    const newpost = await axios.post(`${Api}/api/posts`, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -66,7 +66,7 @@ export const handleDeletePost = async (post) => {
   const token = localStorage.getItem("token");
   try {
     const deletePost = await axios.delete(
-      `${Api}/api/post/delete/${post._id}`,
+      `${Api}/api/posts/delete/${post._id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -86,7 +86,7 @@ export const handleEditPost = async (formData, postIdBeingEdited) => {
   const token = localStorage.getItem("token");
   try {
     const editPost = await axios.put(
-      `${Api}/api/post/update-blog/${postIdBeingEdited}`,
+      `${Api}/api/posts/update-blog/${postIdBeingEdited}`,
       formData,
       {
         headers: {
@@ -106,7 +106,7 @@ export const postLike = async (id) => {
   const token = localStorage.getItem("token");
   try {
     const like = await axios.put(
-      `${Api}/api/post/${id}/like`,
+      `${Api}/api/posts/${id}/like`,
       {}, // empty body (if no data needs to be sent)
       {
         headers: {
@@ -129,7 +129,7 @@ export const postComment = async (id, comment) => {
   // console.log("Token:", token);
   try {
     const res = await axios.post(
-      `${Api}/api/post/${id}/comment`,
+      `${Api}/api/posts/${id}/comment`,
       { content: comment },
       {
         headers: {
@@ -151,7 +151,7 @@ export const postCommentDelete = async (commentId, postId) => {
   const token = localStorage.getItem("token");
   try {
     const res = await axios.delete(
-      `${Api}/api/post/comment/delete/${commentId}/${postId}`,
+      `${Api}/api/posts/comment/delete/${commentId}/${postId}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -164,10 +164,14 @@ export const postCommentDelete = async (commentId, postId) => {
   }
 };
 
-export const getUserPosts = async () => {
+export const getAllPosts = async () => {
   const token = localStorage.getItem("token");
+  if (!token) {
+    console.log("No token found");
+    return;
+  }
   try {
-    const res = await axios.get(`${Api}/api/post`, {
+    const res = await axios.get(`${Api}/api/posts`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

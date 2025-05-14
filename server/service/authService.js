@@ -32,7 +32,8 @@ export const register = async ({ name, email, password, avatar }) => {
     role: "user",
   });
 
-  return { user: formatUser(user) };
+   const token = generateToken(user);
+  return { user: formatUser(user), token };
 };
 
 // Login user

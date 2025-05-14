@@ -1,11 +1,13 @@
 import { register, login, GoogleLogin } from "../service/authService.js";
 
 export const Register = async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   const { name, email, password, avatar } = req.body;
 
   try {
     const user = await register({ name, email, password, avatar });
+
+    console.log("from signUP controller", user);
     res.status(201).json({
       success: true,
       message: "User registered successfully",
@@ -32,7 +34,7 @@ export const Login = async (req, res) => {
 
   try {
     const user = await login({ email, password });
-    // console.log("from controller", user);
+    console.log("from login controller", user);
     res.status(200).json({
       success: true,
       message: "User logged in successfully",

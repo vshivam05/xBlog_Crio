@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import { getUserProfile } from "../api";
 const UserProfile = () => {
   // Example state for user data (replace with actual data fetching)
-  // const [name, setName] = useState("Shivam Verma");
-  // const [avatarUrl, setAvatarUrl] = useState("https://i.pravatar.cc/300");
+
   const [userdata, setuserData] = useState({
     name: "",
     email: "",
@@ -12,7 +11,7 @@ const UserProfile = () => {
   });
 
   const handleNameChange = (event) => {
-    setName(event.target.value);
+    //   setName(event.target.value);
   };
 
   const user = JSON.parse(localStorage.getItem("user"));
@@ -36,9 +35,6 @@ const UserProfile = () => {
   };
 
   useEffect(() => {
-    // console.log("User from localStorage:", user);
-    // setName(user.name);
-    // setAvatarUrl(user.avatar);
     fetchUserProfile(token);
   }, []);
 
@@ -58,6 +54,9 @@ const UserProfile = () => {
     <div className="bg-gray-900 min-h-screen py-8 text-gray-300">
       <div className="container mx-auto max-w-md p-6 rounded-md shadow-md bg-gray-800">
         {/* Header Section */}
+        <h1 className="text-3xl font-bold text-white text-center mb-6">
+          Profile
+        </h1>
         <div className="flex flex-col items-center mb-6">
           <div className="relative w-24 h-24 rounded-full overflow-hidden mb-2">
             <img

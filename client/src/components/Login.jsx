@@ -30,7 +30,7 @@ const Login = () => {
       const res = await axios.post(`${Api}/api/auth/google-login`, {
         googleId,
       });
-      navigate("/login/userprofile");
+      navigate("/");
       // console.log("Backend Response:", res.data.user);
       const { token, user } = res.data;
       // console.log("Response from login:", res.user);
@@ -66,7 +66,7 @@ const Login = () => {
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
 
-      navigate("/login/userprofile");
+      navigate("/");
     } catch (error) {
       console.error("Login failed:", error);
       // Show error message to user if needed
@@ -86,6 +86,7 @@ const Login = () => {
           <input
             type="email"
             id="email"
+            name="email"
             value={formData.email}
             onChange={handleChange}
             placeholder="Enter email"
@@ -99,6 +100,7 @@ const Login = () => {
           <input
             type="password"
             id="password"
+            name="password"
             value={formData.password}
             onChange={handleChange}
             placeholder="Enter password"
@@ -113,7 +115,7 @@ const Login = () => {
         </button>
       </form>
       <button
-        type="submit"
+        type="button"
         onClick={handleGoogleLogin}
         className=" my-2 w-full bg-red-500 hover:bg-red-700 text-white font-bold py-3 rounded-md focus:outline-none focus:shadow-outline"
       >
