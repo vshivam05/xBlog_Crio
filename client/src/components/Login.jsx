@@ -26,6 +26,7 @@ const Login = () => {
         googleId, // 🔹 Send this token to the backend
       };
 
+      console.log("Google User Data:", userData);
       // Send token to backend using Axios
       const res = await axios.post(`${Api}/api/auth/google-login`, {
         googleId,

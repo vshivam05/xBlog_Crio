@@ -125,7 +125,6 @@
 
 // export default UserProfile;
 
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { getUserProfile } from "../api"; // assuming this is a wrapper around axios.get
@@ -174,7 +173,7 @@ const UserProfile = () => {
   const handleUpdateProfile = async () => {
     try {
       const response = await axios.put(
-        "https://me-mern-blog-app.onrender.com/api/users/me",
+        "http://localhost:5000/api/user/me",
         {
           name: form.name,
           avatar: form.avatar,
@@ -185,6 +184,7 @@ const UserProfile = () => {
           },
         }
       );
+      console.log("Profile updated:", response.data);
 
       // Update localStorage if needed
       const updatedUser = {
@@ -215,13 +215,9 @@ const UserProfile = () => {
               className="object-cover w-full h-full"
             />
           </div>
-          <h2 className="text-white text-xl font-semibold mb-1">
-            {form.name}
-          </h2>
+          <h2 className="text-white text-xl font-semibold mb-1">{form.name}</h2>
           <p className="text-sm text-gray-500 mb-1">{form.email}</p>
-          <p className="text-sm text-gray-400">
-            Total Posts: {form.postCount}
-          </p>
+          <p className="text-sm text-gray-400">Total Posts: {form.postCount}</p>
         </div>
 
         <div className="space-y-4">
@@ -240,10 +236,7 @@ const UserProfile = () => {
             />
           </div>
           <div>
-            <label
-              htmlFor="avatar"
-              className="block text-sm font-medium mb-1"
-            >
+            <label htmlFor="avatar" className="block text-sm font-medium mb-1">
               Avatar URL
             </label>
             <input

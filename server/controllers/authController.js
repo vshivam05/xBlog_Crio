@@ -9,9 +9,10 @@ export const Register = async (req, res) => {
 
     console.log("from signUP controller", user);
     res.status(201).json({
-      success: true,
-      message: "User registered successfully",
-      user,
+      // success: true,
+      // message: "User registered successfully",
+      user: user.user,
+      token: user.token,
     });
   } catch (err) {
     res.status(500).json({
@@ -36,9 +37,10 @@ export const Login = async (req, res) => {
     const user = await login({ email, password });
     console.log("from login controller", user);
     res.status(200).json({
-      success: true,
-      message: "User logged in successfully",
-      user,
+      // success: true,
+      // message: "User logged in successfully",
+      user: user.user,
+      token: user.token,
     });
   } catch (err) {
     res.status(500).json({

@@ -5,7 +5,7 @@ export const userInfoController = async (req, res) => {
   try {
     // const user = await User.findById(req.user.id).select("-password"); // hide password
     console.log(
-      "from the user controller to see the current user id",
+      "from the get user details controller to see the current user id",
       req.user.id
     );
     const user = await userInfo(req.user.id);
@@ -36,3 +36,39 @@ export const UserPostsController = async (req, res) => {
       .json({ message: "Error fetching user posts", error: error.message });
   }
 };
+
+// import User from '../models/userModel.js'; // Adjust path to your model
+
+export const updateUserController = async (req, res) => {
+  try {
+    // Step 1: Find the user by ID (assuming req.user contains the user ID)
+    const user = await User.findById(req.user._id); // or req.params.id if you pass id as a route parameter
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Step 2: Extract the new name and avatar from the request body
+    const { name, avatar } = req.body;
+
+    // Step 3: Update the user fields
+    if (name) user.name = name;
+    if (avatar) user.avatar = avatar;
+
+    // Step 4: Save the updated user document
+    await user.save();
+
+    // Step 5: Respond with the updated user details
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      avatar: user.avatar,
+    });
+  } catch (error) {
+    console.error("Error updating user:", error);
+    res.status(500).json({ message: 'Failed to update user profile' });
+  }
+};
+
+

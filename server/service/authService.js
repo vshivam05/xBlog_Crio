@@ -32,7 +32,7 @@ export const register = async ({ name, email, password, avatar }) => {
     role: "user",
   });
 
-   const token = generateToken(user);
+  const token = generateToken(user);
   return { user: formatUser(user), token };
 };
 
