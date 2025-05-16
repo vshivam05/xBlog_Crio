@@ -16,7 +16,7 @@ const HomePage = () => {
     }
     try {
       const res = await getAllPosts();
-      console.log("Fetched posts:", res.data);
+      console.log("Fetched posts:", res);
       setPosts(res.data);
     } catch (err) {
       console.log(err);

@@ -15,31 +15,28 @@ const Login = () => {
   const handleGoogleLogin = async () => {
     try {
       const response = await signInWithPopup(auth, provider);
-      const User = response.user;
-      const googleId = await User.getIdToken(); // 🔹 Get Firebase ID token
+      const Guser = response.user;
+      const googleId = await Guser.getIdToken(); // 🔹 Get Firebase ID token
 
       const userData = {
-        name: User.displayName,
-        email: User.email,
-        avatar: User.photoURL,
-        phoneNumber: User.phoneNumber,
-        googleId, // 🔹 Send this token to the backend
+        name: Guser.displayName,
+        email: Guser.email,
+        avatar: Guser.photoURL,
+        role: "user",
       };
 
-      console.log("Google User Data:", userData);
+      // console.log("Google User Data:", userData);
       // Send token to backend using Axios
-      const res = await axios.post(`${Api}/api/auth/google-login`, {
-        googleId,
-      });
-      navigate("/");
+      const res = await axios.post(`${Api}/api/auth/google-login`, userData);
       // console.log("Backend Response:", res.data.user);
       const { token, user } = res.data;
       // console.log("Response from login:", res.user);
       // console.log("token", token);
       // console.log("User", user);
-
+      
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
+      navigate("/");
     } catch (error) {
       console.error("Google login error:", error);
     }
@@ -59,7 +56,7 @@ const Login = () => {
 
     try {
       const response = await login(formData); // Assuming this returns token + user data
-      const { token, user } = response.user;
+      const { token, user } = response;
       console.log("Response from login:", response.user);
 
       localStorage.setItem("token", token);

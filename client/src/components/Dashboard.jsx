@@ -7,7 +7,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const user = localStorage.getItem("user");
-  console.log("User in Dashboard:", user);
+  // console.log("User in Dashboard:", user);
   const [showCreatePostForm, setShowCreatePostForm] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [getUserPosts, setUserPosts] = useState([]);
@@ -47,6 +47,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchPosts();
+    // console.log("User Posts:", getUserPosts);
   }, []);
 
   const handleCreatePostClick = () => {

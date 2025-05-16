@@ -51,35 +51,62 @@ export const login = async ({ email, password }) => {
 
 // Google login
 
-export const GoogleLogin = async (idToken) => {
+// export const GoogleLogin = async (idToken) => {
+//   try {
+//     // Verify the Google ID token
+//     const googleUser = await admin.auth().verifyIdToken(idToken); // Changed to verifyIdToken
+//     // console.log("Google User:", googleUser);
+
+//     if (!googleUser.email_verified) {
+//       throw new Error("Email not verified by Google");
+//     }
+
+//     // Find the user in your database
+//     let user = await User.findOne({ email: googleUser.email });
+//     // console.log("User found:", user);
+
+//     if (!user) {
+//       // If user doesn't exist, create a new user
+
+//       user = await User.create({
+//         name: googleUser.name,
+//         email: googleUser.email,
+//         avatar: googleUser.picture,
+//         password: await bcrypt.hash(Date.now().toString(), 10), // dummy password
+//         role: "user",
+//       });
+//       console.log("New user created:", user);
+//     }
+
+//     // Generate a token for the user
+//     // console.log("User ID:", user._id);
+//     const token = generateToken(user);
+//     return { user: formatUser(user), token };
+//   } catch (error) {
+//     console.error("Google login error:", error);
+//     throw new Error("Google login failed");
+//   }
+// };
+
+export const GoogleLogin = async ({ name, email, avatar, role }) => {
   try {
-    // Verify the Google ID token
-    const googleUser = await admin.auth().verifyIdToken(idToken); // Changed to verifyIdToken
-    // console.log("Google User:", googleUser);
-
-    if (!googleUser.email_verified) {
-      throw new Error("Email not verified by Google");
-    }
-
-    // Find the user in your database
-    let user = await User.findOne({ email: googleUser.email });
-    // console.log("User found:", user);
-
+    // Look for the user by email
+    let user = await User.findOne({ email });
+    console.log("User found:", user);
     if (!user) {
-      // If user doesn't exist, create a new user
-
+      // If the user doesn't exist, create one
       user = await User.create({
-        name: googleUser.name,
-        email: googleUser.email,
-        avatar: googleUser.picture,
-        password: await bcrypt.hash(Date.now().toString(), 10), // dummy password
-        role: "user",
+        name,
+        email,
+        password: "12345678",
+        avatar,
+
+        role: role || "user",
       });
       console.log("New user created:", user);
     }
 
     // Generate a token for the user
-    // console.log("User ID:", user._id);
     const token = generateToken(user);
     return { user: formatUser(user), token };
   } catch (error) {

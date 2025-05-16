@@ -4,7 +4,7 @@ export const Api = "http://localhost:5000";
 export const register = async (data) => {
   try {
     const response = await axios.post(`${Api}/api/auth/register`, data);
-    console.log(response.data.message);
+    console.log(response.data);
     return await response.data;
   } catch (error) {
     console.error("Error during registration:", error.response.data.message);
@@ -16,7 +16,7 @@ export const register = async (data) => {
 export const login = async (data) => {
   try {
     const response = await axios.post(`${Api}/api/auth/login`, data);
-    console.log(response);
+    console.log(response.data);
     return await response.data;
   } catch (error) {
     console.error("Error during login:", error.response.data.message);

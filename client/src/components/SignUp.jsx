@@ -61,7 +61,8 @@ const SignUp = () => {
       };
 
       const response = await register(payload);
-      const { token, user } = response.user;
+      console.log("register user Backend Response:", response);
+      const { token, user } = response;
       console.log("Registration data sent:", payload);
 
       localStorage.setItem("token", token);
@@ -78,22 +79,27 @@ const SignUp = () => {
   const handleGoogleSignup = async () => {
     try {
       const response = await signInWithPopup(auth, provider);
-      const user = response.user;
-      const googleId = await user.getIdToken();
+      const Guser = response.user;
+      const googleId = await Guser.getIdToken();
 
       const userData = {
-        name: user.displayName,
-        email: user.email,
-        avatar: user.photoURL,
-        phoneNumber: user.phoneNumber,
-        googleId,
+        name: Guser.displayName,
+        email: Guser.email,
+        avatar: Guser.photoURL,
+        role: "user",
       };
 
-      const res = await axios.post(`${Api}/api/auth/google-login`, {
-        googleId,
-      });
+      const res = await axios.post(`${Api}/api/auth/google-login`, userData);
+      console.log("Google User  after signup:", res.data);
+      const { token, user } = res.data;
+      // console.log(res.data.user);
+      console.log("Response from Google signup:", token, user);
 
-      console.log("Backend Response:", res.data);
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      navigate("/");
+      // console.log("Gooogle SignUp data", res.data);
     } catch (error) {
       console.error("Google login error:", error);
     }

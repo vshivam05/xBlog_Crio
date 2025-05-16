@@ -17,7 +17,7 @@ const PostList = ({ posts, handleEdit, fetchPosts, isHomePage }) => {
 
   const user = localStorage.getItem("user");
   const userData = JSON.parse(user);
-  console.log("user from th hompage", user);
+  // console.log("user from th hompage", user);
   const handleView = (post) => {
     setSelectedPost(post);
     setLikes(0); // Reset like count on view

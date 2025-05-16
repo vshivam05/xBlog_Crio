@@ -50,16 +50,38 @@ export const Login = async (req, res) => {
   }
 };
 
-export const googleLogin = async (req, res) => {
-  const { googleId } = req.body;
+// export const googleLogin = async (req, res) => {
+//   const { googleId } = req.body;
 
-  if (!googleId) {
-    return res.status(400).json({ message: "ID token is required" });
+//   if (!googleId) {
+//     return res.status(400).json({ message: "ID token is required" });
+//   }
+
+//   try {
+//     const { user, token } = await GoogleLogin(googleId);
+//     res.status(200).json({ user, token });
+//   } catch (error) {
+//     console.error("Google login failed:", error);
+//     res
+//       .status(500)
+//       .json({ message: "Authentication failed", error: error.message });
+//   }
+// };
+
+export const googleLogin = async (req, res) => {
+  const { name, email, avatar, role } = req.body;
+
+  console.log("from google login/signup controller", req.body);
+  if (!email || !name) {
+    return res
+      .status(400)
+      .json({ message: "Name and email are required for login" });
   }
 
   try {
-    const { user, token } = await GoogleLogin(googleId);
-    res.status(200).json({ user, token });
+    const  user= await GoogleLogin({ name, email, avatar, role });
+    console.log("success", user);
+    res.status(200).json({ user: user.user, token: user.token });
   } catch (error) {
     console.error("Google login failed:", error);
     res
