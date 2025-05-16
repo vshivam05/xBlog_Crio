@@ -137,24 +137,24 @@ describe("Blog App Frontend Tests", () => {
     cy.contains("Crio.Do").should("be.visible");
   });
 
-  // it("User should be able to see his dashboard in the UI", () => {
-  //   cy.contains("Login").click();
-  //   cy.contains("Login").should("be.visible");
+  it("User should be able to see his dashboard in the UI", () => {
+    cy.contains("Login").click();
+    cy.contains("Login").should("be.visible");
 
-  //   cy.get('input[name="email"]').type(temp_email);
-  //   cy.get('input[name="password"]').type(password);
-  //   cy.get('button[type="submit"]').click();
+    cy.get('input[name="email"]').type(temp_email);
+    cy.get('input[name="password"]').type(password);
+    cy.get('button[type="submit"]').click();
 
-  //   cy.wait(2000);
+    cy.wait(2000);
 
-  //   cy.contains("Dashboard").click();
+    cy.contains("Dashboard").click();
 
-  //   cy.wait(1000);
+    cy.wait(1000);
 
-  //   cy.contains("My Posts").should("be.visible");
-  //   cy.contains("You have no posts yet.").should("be.visible");
-  //   cy.contains("+ Create Post").should("be.visible");
-  // });
+    cy.contains("My Posts").should("be.visible");
+    cy.contains("You have no posts yet.").should("be.visible");
+    cy.contains("+ Create Post").should("be.visible");
+  });
 
   it("User should be able to create a post", () => {
     cy.contains("Login").click();
