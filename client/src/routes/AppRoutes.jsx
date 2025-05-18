@@ -6,6 +6,7 @@ import HomePage from "../components/HomePage";
 import UserProfile from "../components/UserProfile";
 import Dashboard from "../components/Dashboard";
 import CreatePost from "../components/CreatePost";
+import EditPost from "../components/EditPost";
 const AppRoutes = () => {
   return (
     <>
@@ -18,6 +19,8 @@ const AppRoutes = () => {
         <Route path="/dashboard" element={<Dashboard />} />
 
         <Route path="/create" element={<CreatePost />} />
+
+        <Route path="/edit/:postId" element={<EditPost />} />
 
         <Route path="*" element={<h1>404 Not Found</h1>} />
       </Routes>

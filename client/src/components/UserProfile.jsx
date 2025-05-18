@@ -171,13 +171,12 @@ const UserProfile = () => {
 
   // Handle profile update
   const handleUpdateProfile = async () => {
+    const { name, avatar } = form;
+    console.log(name);
     try {
       const response = await axios.put(
         "http://localhost:5000/api/user/me",
-        {
-          name: form.name,
-          avatar: form.avatar,
-        },
+        { name },
         {
           headers: {
             Authorization: `Bearer ${token}`,

@@ -6,10 +6,11 @@ import {
   postComment,
   postCommentDelete,
 } from "../api";
+import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComment } from "@fortawesome/free-solid-svg-icons";
 
-const PostList = ({ posts, handleEdit, fetchPosts, isHomePage }) => {
+const PostList = ({ posts, fetchPosts, isHomePage }) => {
   const [selectedPost, setSelectedPost] = useState(null);
   const [likes, setLikes] = useState(0);
   const [comment, setComment] = useState("");
@@ -19,7 +20,10 @@ const PostList = ({ posts, handleEdit, fetchPosts, isHomePage }) => {
   const userData = JSON.parse(user);
   // console.log("user from th hompage", user);
   const handleView = (post) => {
-    setSelectedPost(post);
+    setSelectedPost({
+      ...post,
+      comments: post.comments ?? [], // ensure it's an array
+    });
     setLikes(0); // Reset like count on view
     setComment(""); // Reset comment input
     setComments([]); // Reset previous comments
@@ -38,15 +42,15 @@ const PostList = ({ posts, handleEdit, fetchPosts, isHomePage }) => {
   const handleDelete = async (post) => {
     try {
       const res = await handleDeletePost(post);
-      if (res.status === 200) {
-        //   alert("Post deleted successfully");
+      // if (res.status === 200) {
+      //   alert("Post deleted successfully");
 
-        fetchPosts();
-        console.log("Post deleted successfully:", res);
-      }
-      if (res.status === 403) {
-        alert("You are not authorized to delete this post");
-      }
+      fetchPosts();
+      console.log("Post deleted successfully:", res);
+      // }
+      // if (res.status === 403) {
+      //   alert("You are not authorized to delete this post");
+      // }
     } catch (error) {
       console.error("Error deleting post:", error);
     }
@@ -58,14 +62,12 @@ const PostList = ({ posts, handleEdit, fetchPosts, isHomePage }) => {
 
   const handleLike = async (id) => {
     try {
-      const like = await postLike(id);
-      // console.log("Post liked successfully:", like);
-      //   window.location.reload();
-      //   setLikes(like.data.likes);
+      const res = await postLike(id);
+      const updatedPost = posts.find((p) => p._id === id);
+      if (updatedPost) setSelectedPost(updatedPost);
       fetchPosts();
     } catch (error) {
       console.error("Error liking post:", error);
-      alert(error.response.data.message);
     }
   };
 
@@ -73,29 +75,24 @@ const PostList = ({ posts, handleEdit, fetchPosts, isHomePage }) => {
     try {
       const res = await postCommentDelete(commentId, postId);
       console.log("Comment deleted successfully:", res);
-      if (res.status === 200) {
-        alert("Comment deleted successfully");
-        fetchPosts();
-      }
+      // if (res.status === 200) {
+      fetchPosts();
+      alert("Comment deleted successfully");
+      // }
     } catch (error) {
       console.log("Error while deleting comment:", error);
     }
   };
 
   const handleCommentSubmit = async (id) => {
-    // if (comment.trim() !== "") {
-    //   setComments((prev) => [...prev, comment]);
-    //   setComment("");
-    // }
     console.log("Comment submitted:", comment);
     setComments(comment);
     setComment("");
 
     try {
       const res = await postComment(id, comment);
-      console.log("Comment posted successfully:", res);
-
       fetchPosts();
+      console.log("Comment posted successfully:", res);
     } catch (error) {
       console.error("Error posting comment:", error);
     }
@@ -136,24 +133,30 @@ const PostList = ({ posts, handleEdit, fetchPosts, isHomePage }) => {
               onClick={() => {
                 handleLike(selectedPost._id);
               }}
-              className="bg-pink-500 w-full text-white px-4 py-2 rounded hover:bg-pink-600"
+              className="bg-pink-500 w-full text-gray-500 px-4 py-2 rounded hover:bg-pink-600"
             >
-              ❤️ Like {selectedPost.likes.length}
+              {/* Like ({selectedPost.likes?.length || 0}) */}
+              Like (
+              {selectedPost.likes && selectedPost.likes.length >= 0
+                ? selectedPost.likes.length
+                : 0}
+              )
             </button>
           </div>
 
           {/* Comment Input */}
           <div className="mt-6">
             <h3 className="text-lg font-semibold mb-2">
-              {" "}
-              <FontAwesomeIcon icon={faComment} /> Add a Comment
+              {/* <FontAwesomeIcon icon={faComment} /> */}
+              Add Comment
             </h3>
             <div className="flex">
               <input
                 type="text"
                 value={comment}
+                name="comment"
                 onChange={(e) => setComment(e.target.value)}
-                placeholder="Write a comment..."
+                placeholder="Add Comment..."
                 className="flex-1 border border-gray-300 rounded-l px-4 py-2"
               />
               <button
@@ -163,23 +166,22 @@ const PostList = ({ posts, handleEdit, fetchPosts, isHomePage }) => {
                 }}
                 className="bg-blue-500 text-white px-4 py-2 rounded-r hover:bg-blue-600"
               >
-                Post
+                Add Comment
               </button>
             </div>
 
             {/* Display Comments */}
             <ul className="mt-4 space-y-2">
-              {selectedPost.comments.map((c, index) => {
-                return (
+              {Array.isArray(selectedPost.comments) &&
+                selectedPost.comments.map((c, index) => (
                   <li
                     key={index}
                     className="bg-gray-100 text-gray-500 p-2 rounded shadow-sm text-sm flex justify-between"
                   >
-                    <span>{c.content}</span>
-
+                    <span>{c.content || c}</span>
                     <button
                       type="button"
-                      className=" text-white bg-red-500 hover:text-gray-700 rounded p-2 px-4 "
+                      className="text-white bg-red-500 hover:text-gray-700 rounded p-2 px-4"
                       onClick={() => {
                         handleCommentDelete(c._id, selectedPost._id);
                       }}
@@ -187,8 +189,7 @@ const PostList = ({ posts, handleEdit, fetchPosts, isHomePage }) => {
                       Delete
                     </button>
                   </li>
-                );
-              })}
+                ))}
             </ul>
           </div>
 
@@ -249,9 +250,14 @@ const PostList = ({ posts, handleEdit, fetchPosts, isHomePage }) => {
                       onClick={() => {
                         handleLike(post._id);
                       }}
-                      className="text-gray px-4 py-2 rounded hover:bg-pink-600 hover:text-white"
+                      className="text-gray-500 px-4 py-2 rounded hover:bg-pink-600 hover:text-white"
                     >
-                      ❤️ Like {post.likes.length}
+                      {/* Like ({post.likes?.length || 0}) */}
+                      Like (
+                      {post.likes && post.likes.length >= 0
+                        ? post.likes.length
+                        : 0}
+                      )
                     </button>
 
                     <span className="text-gray-500 text-sm mt-2 ">
@@ -269,13 +275,12 @@ const PostList = ({ posts, handleEdit, fetchPosts, isHomePage }) => {
                     >
                       View
                     </button>
-                    <button
-                      type="button"
-                      onClick={() => handleEdit(post)}
+                    <Link
+                      to={`/edit/${post._id}`}
                       className="m-2 bg-transparent hover:bg-gray-500 text-gray-800 font-semibold hover:text-white py-2 px-4 border border-gray-500 hover:border-transparent rounded"
                     >
                       Edit
-                    </button>
+                    </Link>
                     <button
                       type="button"
                       onClick={() => handleDelete(post)}

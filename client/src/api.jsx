@@ -176,10 +176,27 @@ export const getAllPosts = async () => {
         Authorization: `Bearer ${token}`,
       },
     });
+
+    return res;
     // console.log("Fetched posts:", res.data);
     return res;
   } catch (error) {
     console.error("Error fetching user posts:", error);
     return error;
+  }
+};
+
+export const getPostById = async (postId) => {
+  const token = localStorage.getItem("token");
+  try {
+    const res = await axios.get(`${Api}/api/posts/${postId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return res;
+  } catch (err) {
+    return err;
   }
 };
