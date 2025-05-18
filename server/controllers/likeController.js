@@ -7,7 +7,9 @@ export const likePost = async (req, res) => {
     const userId = req.user.id; // Assuming req.user.id contains the logged-in user's ID
 
     const updatedPost = await likePostService(postId, userId);
-    res.status(200).json(updatedPost);
+    console.log("Updated post after like/unlike:", updatedPost);
+    const likeCount = updatedPost.likes.length;
+    res.status(200).json({ message: "Post liked", totalLikes: likeCount });
   } catch (error) {
     res
       .status(500)

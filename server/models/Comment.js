@@ -13,7 +13,7 @@ const commentSchema = new mongoose.Schema(
       ref: "User", // Reference to the User model (author of the comment)
       required: true,
     },
-    content: {
+    text: {
       type: String,
       required: true,
       trim: true,

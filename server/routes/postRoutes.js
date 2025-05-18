@@ -31,31 +31,26 @@ router.get("/:id", VerifyToken, getPostById);
 
 // Update a post by ID
 
-router.put("/update-blog/:id", VerifyToken, upload.single("image"), updatePost);
+router.put("/:id", VerifyToken, upload.single("image"), updatePost);
 
 // Delete a post by ID
-router.delete(
-  "/delete/:postId",
-  VerifyToken,
-  authorizePostOwnerOrAdmin,
-  deletePost
-);
+router.delete("/:postId", VerifyToken, authorizePostOwnerOrAdmin, deletePost);
 
 // Route for liking/unliking a post
-router.put("/:id/like", VerifyToken, likePost);
+router.post("/:id/like", VerifyToken, likePost);
 
 // Route for adding a comment to a post
-router.post("/:postId/comment", VerifyToken, addComment);
+router.post("/:postId/comments", VerifyToken, addComment);
 
 // Route for getting comments of a post
-router.get("/:postId/comment", VerifyToken, getCommentsControllers);
+router.get("/:postId/comments", VerifyToken, getCommentsControllers);
 
 // Route for deleting a comment
-router.delete(
-  "/comment/delete/:commentId/:postId",
-  VerifyToken,
-  authorizePostOwnerOrAdmin,
-  deleteCommentController
-);
+// router.delete(
+//   "/comments/:commentId/",
+//   VerifyToken,
+//   authorizePostOwnerOrAdmin,
+//   deleteCommentController
+// );
 
 export default router;

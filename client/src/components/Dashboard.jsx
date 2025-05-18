@@ -28,7 +28,7 @@ const Dashboard = () => {
         console.log("Fetched posts:", response.data);
         setUserPosts(response.data);
       } else {
-        const response = await fetch(`${Api}/api/user/posts`, {
+        const response = await fetch(`${Api}/api/users/me/posts`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,

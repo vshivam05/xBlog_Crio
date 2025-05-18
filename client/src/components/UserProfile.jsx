@@ -175,7 +175,7 @@ const UserProfile = () => {
     console.log(name);
     try {
       const response = await axios.put(
-        "http://localhost:5000/api/user/me",
+        "http://localhost:5000/api/users/me",
         { name },
         {
           headers: {

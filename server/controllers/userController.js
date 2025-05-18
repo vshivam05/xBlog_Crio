@@ -1,6 +1,7 @@
 // userController.js
 import { userInfo, getUserPosts } from "../service/userService.js";
 import User from "../models/User.js";
+import Post from "../models/Post.js";
 export const userInfoController = async (req, res) => {
   try {
     // const user = await User.findById(req.user.id).select("-password"); // hide password
@@ -21,10 +22,32 @@ export const userInfoController = async (req, res) => {
   }
 };
 
+export const getUserProfileById = async (req, res) => {
+   try {
+    const user = await User.findById(req.params.id).select("-password");
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const postCount = await Post.countDocuments({ author: user._id });
+
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      avatar: user.avatar,
+      postCount
+    });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Failed to fetch profile", error: err.message });
+  }
+};
+
 export const UserPostsController = async (req, res) => {
   // console.log("from the user posts", req.user.id);
   try {
-    const userposts = await getUserPosts(req.user.id);
+    const userposts = await getUserPosts(req.user.id); // populate author details
 
     if (!userposts) {
       return res.status(404).json({ message: "User posts not found" });

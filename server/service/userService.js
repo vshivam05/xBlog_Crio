@@ -1,22 +1,14 @@
-import User from '../models/User.js';
-import Post from '../models/Post.js';
+import User from "../models/User.js";
+import Post from "../models/Post.js";
+
 export const userInfo = async (id) => {
-
-//   const userData = await User.findById(id).select('-password')
-
-//   if (!userData) {
-//     return null;
-//   }
-
-//   return userData;
-
-  const user = await User.findById(id).select('-password'); // Hide sensitive fields
+  const user = await User.findById(id).select("-password"); // Hide sensitive fields
 
   if (!user) {
     return null;
   }
 
-//   const postCount = await Post.countDocuments({ author: id });
+  //   const postCount = await Post.countDocuments({ author: id });
   const postCount = await Post.countDocuments({ author: id });
 
   return {
@@ -28,7 +20,6 @@ export const userInfo = async (id) => {
   };
 };
 
-
 export const updateUser = async (id, updatedData) => {
   const user = await User.findByIdAndUpdate(id, updatedData, {
     new: true,
@@ -36,17 +27,17 @@ export const updateUser = async (id, updatedData) => {
   });
 
   if (!user) {
-    throw new Error('User not found');
+    throw new Error("User not found");
   }
 
   return user;
-}
+};
 
-export const getUserPosts = async (userId) =>{
+export const getUserPosts = async (userId) => {
+  const posts = await Post.find({ author: userId })
+    .populate("author", "name email")
+    .populate("comments", "text") // populate author details
+    .lean(); // convert to plain JS object
 
-    const posts = await Post.find({ author: userId })
-        .populate('author', 'name email').populate('comments','content') // populate author details
-        .lean(); // convert to plain JS object
-    
-    return posts;
-}
+  return posts;
+};

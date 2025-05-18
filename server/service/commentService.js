@@ -2,22 +2,21 @@
 import Post from "../models/Post.js";
 import Comment from "../models/Comment.js";
 
-export const addCommentService = async (postId, userId, content) => {
+export const addCommentService = async (postId, userId, text) => {
   const post = await Post.findById(postId);
-  if (!post) throw new Error("Post not found");
+
+  console.log(postId, userId, text);
+ if (!post) {
+    // Instead of trying to use res, just throw an error
+    throw new Error("Post not found");
+  }
 
   // Create a new comment
   const newComment = new Comment({
     postId,
     author: userId,
-    content,
+    text,
   });
-
-  //   await newComment.save();
-
-  //   // Add comment ID to the post's comments array
-  //   post.comments.push(newComment._id);
-  //   await post.save();
   const savedComment = await newComment.save();
 
   // Push the new comment to the Post's comment array
@@ -30,7 +29,7 @@ export const addCommentService = async (postId, userId, content) => {
 
 export const getCommentsService = async (postId) => {
   const comments = await Comment.find(postId)
-    .populate("author", "name email role") // populate author details
+    .populate("author", "name email") // populate author details
     .lean(); // convert to plain JS object
 
   return comments;

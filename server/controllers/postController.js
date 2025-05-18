@@ -9,28 +9,39 @@ import {
 } from "../service/postService.js";
 
 export const createPost = async (req, res) => {
-  console.log("from create post controller", req.user.id);
+  console.log("from create post controller", req.body);
 
   try {
     const { title, content, tags } = req.body;
 
-    const imagePath = req.file?.path || "";
+    // Ensure tags is always an array
+    const normalizedTags =
+      typeof tags === "string"
+        ? tags.split(",").map((tag) => tag.trim())
+        : Array.isArray(tags)
+        ? tags
+        : [];
+
+    // If image is uploaded through multipart form
+    const imagePath = req.file?.path || req.body.image || "";
+
     const post = await createPostService({
       title,
       content,
-      tags: tags?.split(",") || [],
-      image: imagePath, // ✅ This is a string
+      tags: normalizedTags,
+      image: imagePath,
       author: req.user.id,
     });
 
     res.status(201).json(post);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res
       .status(500)
       .json({ message: "Error creating post", error: error.message });
   }
 };
+
 
 export const getAllPosts = async (req, res) => {
   try {

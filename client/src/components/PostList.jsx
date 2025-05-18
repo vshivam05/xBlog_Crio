@@ -103,7 +103,7 @@ const PostList = ({ posts, fetchPosts, isHomePage }) => {
   // View Single Post
   if (selectedPost) {
     const date = new Date(selectedPost.createdAt).toLocaleDateString();
-    console.log(`${Api}/${selectedPost.image.replace(/\\/g, "/")}`);
+    // console.log(`${Api}/${selectedPost.image.replace(/\\/g, "/")}`);
     return (
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-lg p-6">
@@ -178,7 +178,7 @@ const PostList = ({ posts, fetchPosts, isHomePage }) => {
                     key={index}
                     className="bg-gray-100 text-gray-500 p-2 rounded shadow-sm text-sm flex justify-between"
                   >
-                    <span>{c.content || c}</span>
+                    <span>{c.text || c}</span>
                     <button
                       type="button"
                       className="text-white bg-red-500 hover:text-gray-700 rounded p-2 px-4"
@@ -218,7 +218,12 @@ const PostList = ({ posts, fetchPosts, isHomePage }) => {
             >
               <img
                 className="w-full h-48 object-cover"
-                src={`${Api}/${post.image.replace(/\\/g, "/")}`}
+                // src={`${Api}/${post.image.replace(/\\/g, "/")}`}
+                src={
+                  post.image
+                    ? `${Api}/${post.image.replace(/\\/g, "/")}`
+                    : "/default-image.jpg"
+                }
                 alt="Post"
               />
               <div className="px-6 py-4">
