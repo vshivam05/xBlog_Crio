@@ -401,7 +401,7 @@ describe("Blog App Frontend Tests", () => {
 
     cy.contains("Test Comment by Crio.Do").should("be.visible");
   });
-  });
+});
 
 // ---------------- BACKEND API TESTS ----------------
 
